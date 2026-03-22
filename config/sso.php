@@ -1,5 +1,7 @@
 <?php
 
+use Eighteen73\SSO\Actions\ResolveUser;
+
 return [
     /*
      |--------------------------------------------------------------------------
@@ -41,7 +43,7 @@ return [
      | Must implement Eighteen73\SSO\Actions\ResolveUserContract.
      |
      */
-    'user_resolver' => \Eighteen73\SSO\Actions\ResolveUser::class ,
+    'user_resolver' => ResolveUser::class,
 
     /*
      |--------------------------------------------------------------------------
@@ -83,7 +85,7 @@ return [
     'config' => [
         'client_id' => env('ZITADEL_CLIENT_ID'),
         'client_secret' => env('ZITADEL_CLIENT_SECRET'),
-        'redirect' => env('ZITADEL_REDIRECT_URI', env('APP_URL') . '/sso/callback'),
+        'redirect' => env('ZITADEL_REDIRECT_URI', env('APP_URL').'/sso/callback'),
         'base_url' => env('ZITADEL_BASE_URL'),
         'post_logout_redirect_uri' => env('ZITADEL_POST_LOGOUT_REDIRECT_URI', env('APP_URL')),
     ],

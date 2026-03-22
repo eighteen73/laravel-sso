@@ -69,9 +69,9 @@ class CustomResolveUser extends ResolveUser
     public function resolve(string $provider, ProviderUser $ssoUser): Authenticatable
     {
         $user = parent::resolve($provider, $ssoUser);
-        
+
         // Add your custom logic here
-        
+
         return $user;
     }
 }

@@ -3,9 +3,14 @@
 namespace Eighteen73\SSO;
 
 use Eighteen73\SSO\Actions\ResolveUserContract;
+use Filament\Facades\Filament;
+use Filament\Support\Facades\FilamentView;
+use Filament\View\PanelsRenderHook;
+use Illuminate\Contracts\View\View;
 use Illuminate\Support\Facades\Event;
 use Illuminate\Support\ServiceProvider;
 use SocialiteProviders\Manager\SocialiteWasCalled;
+use SocialiteProviders\Zitadel\Provider;
 
 class SSOServiceProvider extends ServiceProvider
 {
@@ -38,7 +43,7 @@ class SSOServiceProvider extends ServiceProvider
         }
 
         Event::listen(function (SocialiteWasCalled $event) {
-            $event->extendSocialite('zitadel', \SocialiteProviders\Zitadel\Provider::class);
+            $event->extendSocialite('zitadel', Provider::class);
         });
 
         $this->registerFilamentIntegration();
@@ -46,21 +51,21 @@ class SSOServiceProvider extends ServiceProvider
 
     protected function registerFilamentIntegration(): void
     {
-        if (! class_exists(\Filament\Facades\Filament::class) || ! config('sso.filament.enabled', true)) {
+        if (! class_exists(Filament::class) || ! config('sso.filament.enabled', true)) {
             return;
         }
 
         $panels = config('sso.filament.panels', ['*']);
 
         if ($panels === ['*']) {
-            \Filament\Support\Facades\FilamentView::registerRenderHook(
-                \Filament\View\PanelsRenderHook::AUTH_LOGIN_FORM_AFTER,
-                fn (): \Illuminate\Contracts\View\View => view('sso::login-button')
+            FilamentView::registerRenderHook(
+                PanelsRenderHook::AUTH_LOGIN_FORM_AFTER,
+                fn (): View => view('sso::login-button')
             );
         } else {
-            \Filament\Support\Facades\FilamentView::registerRenderHook(
-                \Filament\View\PanelsRenderHook::AUTH_LOGIN_FORM_AFTER,
-                fn (): \Illuminate\Contracts\View\View => view('sso::login-button'),
+            FilamentView::registerRenderHook(
+                PanelsRenderHook::AUTH_LOGIN_FORM_AFTER,
+                fn (): View => view('sso::login-button'),
                 $panels
             );
         }

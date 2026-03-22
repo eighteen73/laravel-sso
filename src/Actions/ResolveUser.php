@@ -7,6 +7,7 @@ use Eighteen73\SSO\Events\SSOUserResolved;
 use Eighteen73\SSO\Exceptions\UserNotFoundException;
 use Eighteen73\SSO\Models\SSOAccount;
 use Illuminate\Contracts\Auth\Authenticatable;
+use Illuminate\Foundation\Auth\User;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Str;
 use Laravel\Socialite\Contracts\User as ProviderUser;
@@ -22,13 +23,13 @@ class ResolveUser implements ResolveUserContract
         if ($socialAccount) {
             $this->updateTokens($socialAccount, $ssoUser);
             $user = $socialAccount->user;
-            
+
             event(new SSOUserResolved($provider, $ssoUser, $user));
-            
+
             return $user;
         }
 
-        $userModel = config('auth.providers.users.model', \Illuminate\Foundation\Auth\User::class);
+        $userModel = config('auth.providers.users.model', User::class);
         $user = $userModel::where('email', $ssoUser->getEmail())->first();
 
         if (! $user) {
@@ -41,7 +42,7 @@ class ResolveUser implements ResolveUserContract
         }
 
         $this->linkUser($user, $provider, $ssoUser);
-        
+
         event(new SSOUserResolved($provider, $ssoUser, $user));
 
         return $user;
@@ -64,7 +65,7 @@ class ResolveUser implements ResolveUserContract
             'provider_id' => $ssoUser->getId(),
             'token' => $ssoUser->token,
             'refresh_token' => $ssoUser->refreshToken,
-            'expires_at' => property_exists($ssoUser, 'expiresIn') ? now()->addSeconds($ssoUser->expiresIn) : null,
+            'expires_at' => ! empty($ssoUser->expiresIn) ? now()->addSeconds($ssoUser->expiresIn) : null,
         ]);
     }
 
@@ -73,7 +74,7 @@ class ResolveUser implements ResolveUserContract
         $socialAccount->update([
             'token' => $ssoUser->token,
             'refresh_token' => $ssoUser->refreshToken,
-            'expires_at' => property_exists($ssoUser, 'expiresIn') ? now()->addSeconds($ssoUser->expiresIn) : $socialAccount->expires_at,
+            'expires_at' => ! empty($ssoUser->expiresIn) ? now()->addSeconds($ssoUser->expiresIn) : $socialAccount->expires_at,
         ]);
     }
 }

@@ -1,13 +1,14 @@
 <?php
 
 use Eighteen73\SSO\Actions\ResolveUser;
+use Eighteen73\SSO\Exceptions\UserNotFoundException;
 use Eighteen73\SSO\Tests\TestUser;
 use Laravel\Socialite\Two\User as ProviderUser;
 
 it('creates a new user and social account when auto create is true', function () {
     config()->set('sso.auto_create_users', true);
 
-    $ssoUser = new ProviderUser();
+    $ssoUser = new ProviderUser;
     $ssoUser->map([
         'id' => '12345',
         'email' => 'test@example.com',
@@ -15,7 +16,7 @@ it('creates a new user and social account when auto create is true', function ()
     ]);
     $ssoUser->setToken('fake-token');
 
-    $resolver = new ResolveUser();
+    $resolver = new ResolveUser;
     $user = $resolver->resolve('zitadel', $ssoUser);
 
     expect($user)->toBeInstanceOf(TestUser::class)
@@ -42,7 +43,7 @@ it('links existing user when email matches', function () {
         'password' => 'secret',
     ]);
 
-    $ssoUser = new ProviderUser();
+    $ssoUser = new ProviderUser;
     $ssoUser->map([
         'id' => '67890',
         'email' => 'existing@example.com',
@@ -50,7 +51,7 @@ it('links existing user when email matches', function () {
     ]);
     $ssoUser->setToken('fake-token2');
 
-    $resolver = new ResolveUser();
+    $resolver = new ResolveUser;
     $user = $resolver->resolve('zitadel', $ssoUser);
 
     expect($user->id)->toBe($existingUser->id);
@@ -65,15 +66,15 @@ it('links existing user when email matches', function () {
 it('throws exception when auto create is false and user does not exist', function () {
     config()->set('sso.auto_create_users', false);
 
-    $ssoUser = new ProviderUser();
+    $ssoUser = new ProviderUser;
     $ssoUser->map([
         'id' => 'abcde',
         'email' => 'missing@example.com',
         'name' => 'Missing User',
     ]);
 
-    $resolver = new ResolveUser();
-    
+    $resolver = new ResolveUser;
+
     expect(fn () => $resolver->resolve('zitadel', $ssoUser))
-        ->toThrow(\Eighteen73\SSO\Exceptions\UserNotFoundException::class, 'User not found and auto-creation is disabled.');
+        ->toThrow(UserNotFoundException::class, 'User not found and auto-creation is disabled.');
 });

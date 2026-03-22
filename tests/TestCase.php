@@ -3,10 +3,12 @@
 namespace Eighteen73\SSO\Tests;
 
 use Eighteen73\SSO\SSOServiceProvider;
-use Orchestra\Testbench\TestCase as Orchestra;
-use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Foundation\Auth\User;
+use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\Schema;
+use Orchestra\Testbench\TestCase as Orchestra;
+use SocialiteProviders\Manager\ServiceProvider;
 
 class TestCase extends Orchestra
 {
@@ -20,7 +22,7 @@ class TestCase extends Orchestra
     protected function getPackageProviders($app)
     {
         return [
-            \SocialiteProviders\Manager\ServiceProvider::class,
+            ServiceProvider::class,
             SSOServiceProvider::class,
         ];
     }
@@ -33,12 +35,12 @@ class TestCase extends Orchestra
             'database' => ':memory:',
             'prefix' => '',
         ]);
-        
+
         config()->set('app.key', 'base64:JjR0yY1sNf5mK/A0X2+D2D+y2G/2lZ3N8V7lU4jFwG8=');
         config()->set('sso.auto_create_users', true);
         config()->set('auth.providers.users.model', TestUser::class);
     }
-    
+
     protected function defineDatabaseMigrations()
     {
         Schema::create('users', function (Blueprint $table) {
@@ -49,12 +51,13 @@ class TestCase extends Orchestra
             $table->timestamps();
         });
 
-        $this->loadMigrationsFrom(__DIR__ . '/../database/migrations');
+        $this->loadMigrationsFrom(__DIR__.'/../database/migrations');
     }
 }
 
-class TestUser extends \Illuminate\Foundation\Auth\User
+class TestUser extends User
 {
     protected $table = 'users';
+
     protected $guarded = [];
 }
