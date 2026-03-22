@@ -29,6 +29,11 @@ class SSOController extends Controller
             return redirect('/login')->withErrors(['sso' => 'Authentication failed or was cancelled.']);
         }
 
+        // Store the ID token for global logout
+        if (!empty($ssoUser->accessTokenResponseBody['id_token'])) {
+            session()->put('sso_id_token', $ssoUser->accessTokenResponseBody['id_token']);
+        }
+
         /** @var ResolveUserContract $resolver */
         $resolver = app(ResolveUserContract::class);
         
@@ -45,5 +50,27 @@ class SSOController extends Controller
         Auth::login($user);
 
         return redirect()->intended(config('sso.redirect_path', '/'));
+    }
+
+    public function logout(Request $request)
+    {
+        $provider = config('sso.provider', 'zitadel');
+        $idToken = session('sso_id_token');
+
+        Auth::logout();
+        $request->session()->invalidate();
+        $request->session()->regenerateToken();
+
+        if ($idToken && $provider === 'zitadel') {
+            try {
+                // Zitadel Socialite provider supports getLogoutUrl
+                $logoutUrl = Socialite::driver($provider)->getLogoutUrl($idToken);
+                return redirect()->away($logoutUrl);
+            } catch (\Exception $e) {
+                // Fallback if something goes wrong
+            }
+        }
+
+        return redirect('/');
     }
 }

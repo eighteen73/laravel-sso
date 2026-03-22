@@ -43,6 +43,16 @@ The configuration file is located at `config/sso.php`. You can customise the fol
 - `user_resolver`: The action class used to map SSO data to a local user.
 - `filament`: Settings for Filament integration, including which panels to display the SSO button on.
 
+## Global Logout
+
+The package provides a `/sso/logout` route that not only logs the user out of your local Laravel application but also securely terminates their global SSO session at Zitadel (or the active provider). By default, the user will be redirected back to your application's home page after logging out of Zitadel.
+
+To customise the return path, ensure you set the `ZITADEL_POST_LOGOUT_REDIRECT_URI` environment variable in your host application:
+
+```env
+ZITADEL_POST_LOGOUT_REDIRECT_URI=https://your-app.com/logged-out
+```
+
 ## Customising User Resolution
 
 If you need to perform additional logic when a user is resolved (such as assigning roles or updating custom attributes), you can create a custom action that implements `Eighteen73\SSO\Actions\ResolveUserContract` and update the `user_resolver` in your config.
