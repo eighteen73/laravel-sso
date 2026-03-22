@@ -1,8 +1,8 @@
 {
     "name": "eighteen73/laravel-sso",
     "description": "Abstract SSO logic into a reusable, self-contained Laravel package.",
-    "type": "library",
     "license": "MIT",
+    "type": "library",
     "authors": [
         {
             "name": "eighteen73"
@@ -10,18 +10,21 @@
     ],
     "require": {
         "php": "^8.2",
-        "illuminate/support": "^12.0",
         "illuminate/contracts": "^12.0",
+        "illuminate/support": "^12.0",
         "laravel/socialite": "^5.12",
         "socialiteproviders/zitadel": "^4.2"
     },
     "require-dev": {
+        "ergebnis/composer-normalize": "^2.50",
+        "laravel/pint": "^1.29",
         "orchestra/testbench": "^10.0",
         "pestphp/pest": "^3.0",
         "pestphp/pest-plugin-laravel": "^3.0",
-        "phpstan/phpstan": "^2.1",
-        "laravel/pint": "^1.29"
+        "phpstan/phpstan": "^2.1"
     },
+    "minimum-stability": "dev",
+    "prefer-stable": true,
     "autoload": {
         "psr-4": {
             "Eighteen73\\SSO\\": "src/"
@@ -32,6 +35,12 @@
             "Eighteen73\\SSO\\Tests\\": "tests/"
         }
     },
+    "config": {
+        "allow-plugins": {
+            "ergebnis/composer-normalize": true,
+            "pestphp/pest-plugin": true
+        }
+    },
     "extra": {
         "laravel": {
             "providers": [
@@ -39,11 +48,12 @@
             ]
         }
     },
-    "minimum-stability": "dev",
-    "prefer-stable": true,
-    "config": {
-        "allow-plugins": {
-            "pestphp/pest-plugin": true
-        }
+    "scripts": {
+        "post-update-cmd": [
+            "@composer normalize"
+        ],
+        "post-require": [
+            "@composer normalize"
+        ]
     }
 }
