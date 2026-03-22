@@ -1,0 +1,49 @@
+{
+    "name": "eighteen73/laravel-sso",
+    "description": "Abstract SSO logic into a reusable, self-contained Laravel package.",
+    "type": "library",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "eighteen73"
+        }
+    ],
+    "require": {
+        "php": "^8.2",
+        "illuminate/support": "^12.0",
+        "illuminate/contracts": "^12.0",
+        "laravel/socialite": "^5.12",
+        "socialiteproviders/zitadel": "^4.2"
+    },
+    "require-dev": {
+        "orchestra/testbench": "^10.0",
+        "pestphp/pest": "^3.0",
+        "pestphp/pest-plugin-laravel": "^3.0",
+        "phpstan/phpstan": "^2.1",
+        "laravel/pint": "^1.29"
+    },
+    "autoload": {
+        "psr-4": {
+            "Eighteen73\\SSO\\": "src/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Eighteen73\\SSO\\Tests\\": "tests/"
+        }
+    },
+    "extra": {
+        "laravel": {
+            "providers": [
+                "Eighteen73\\SSO\\SSOServiceProvider"
+            ]
+        }
+    },
+    "minimum-stability": "dev",
+    "prefer-stable": true,
+    "config": {
+        "allow-plugins": {
+            "pestphp/pest-plugin": true
+        }
+    }
+}

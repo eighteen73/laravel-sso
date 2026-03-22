@@ -1,0 +1,9 @@
+/vendor/
+/.idea/
+/.vscode/
+/composer.lock
+.phpunit.result.cache
+.pestphp-laravel-plugin.cache
+/.phpunit.cache/
+/node_modules/
+.env
