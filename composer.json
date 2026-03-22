@@ -10,16 +10,16 @@
         }
     ],
     "require": {
-        "php": "^8.2",
-        "illuminate/contracts": "^12.0",
-        "illuminate/support": "^12.0",
+        "php": "^8.3",
+        "illuminate/contracts": "^12.0 || ^13.0",
+        "illuminate/support": "^12.0 || ^13.0",
         "laravel/socialite": "^5.12",
         "socialiteproviders/zitadel": "^4.2"
     },
     "require-dev": {
         "ergebnis/composer-normalize": "^2.50",
         "laravel/pint": "^1.29",
-        "orchestra/testbench": "^10.0",
+        "orchestra/testbench": "^10.0 || ^11.0",
         "pestphp/pest": "^3.0",
         "pestphp/pest-plugin-laravel": "^3.0",
         "phpstan/phpstan": "^2.1"
