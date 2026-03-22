@@ -6,8 +6,10 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Foundation\Auth\User;
 
-class SocialAccount extends Model
+class SSOAccount extends Model
 {
+    protected $table = 'sso_accounts';
+
     protected $fillable = [
         'user_id',
         'provider',

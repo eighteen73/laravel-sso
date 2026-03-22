@@ -7,7 +7,7 @@ A reusable Laravel package for integrating Single Sign-On (SSO) using Laravel So
 ## Features
 
 - Automatic Socialite provider registration for Zitadel.
-- Dedicated `social_accounts` table to map SSO identities to local users.
+- Dedicated `sso_accounts` table to map SSO identities to local users.
 - Configurable user resolution and auto-creation logic.
 - Automatic integration with Filament login forms via render hooks.
 - Support for multiple SSO connections per user.

@@ -5,7 +5,7 @@ namespace Eighteen73\SSO\Actions;
 use Eighteen73\SSO\Events\SSOUserCreated;
 use Eighteen73\SSO\Events\SSOUserResolved;
 use Eighteen73\SSO\Exceptions\UserNotFoundException;
-use Eighteen73\SSO\Models\SocialAccount;
+use Eighteen73\SSO\Models\SSOAccount;
 use Illuminate\Contracts\Auth\Authenticatable;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Str;
@@ -15,7 +15,7 @@ class ResolveUser implements ResolveUserContract
 {
     public function resolve(string $provider, ProviderUser $ssoUser): Authenticatable
     {
-        $socialAccount = SocialAccount::where('provider', $provider)
+        $socialAccount = SSOAccount::where('provider', $provider)
             ->where('provider_id', $ssoUser->getId())
             ->first();
 
@@ -58,7 +58,7 @@ class ResolveUser implements ResolveUserContract
 
     protected function linkUser(Authenticatable $user, string $provider, ProviderUser $ssoUser): void
     {
-        SocialAccount::create([
+        SSOAccount::create([
             'user_id' => $user->getAuthIdentifier(),
             'provider' => $provider,
             'provider_id' => $ssoUser->getId(),
@@ -68,7 +68,7 @@ class ResolveUser implements ResolveUserContract
         ]);
     }
 
-    protected function updateTokens(SocialAccount $socialAccount, ProviderUser $ssoUser): void
+    protected function updateTokens(SSOAccount $socialAccount, ProviderUser $ssoUser): void
     {
         $socialAccount->update([
             'token' => $ssoUser->token,

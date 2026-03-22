@@ -25,7 +25,7 @@ it('creates a new user and social account when auto create is true', function ()
         'email' => 'test@example.com',
     ]);
 
-    $this->assertDatabaseHas('social_accounts', [
+    $this->assertDatabaseHas('sso_accounts', [
         'user_id' => $user->id,
         'provider' => 'zitadel',
         'provider_id' => '12345',
@@ -55,7 +55,7 @@ it('links existing user when email matches', function () {
 
     expect($user->id)->toBe($existingUser->id);
 
-    $this->assertDatabaseHas('social_accounts', [
+    $this->assertDatabaseHas('sso_accounts', [
         'user_id' => $existingUser->id,
         'provider' => 'zitadel',
         'provider_id' => '67890',

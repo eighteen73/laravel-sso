@@ -32,6 +32,11 @@ class SSOServiceProvider extends ServiceProvider
             ], 'sso-views');
         }
 
+        // Automatically inject the zitadel config if it's missing from the host app
+        if (! config()->has('services.zitadel')) {
+            config(['services.zitadel' => config('sso.config')]);
+        }
+
         Event::listen(function (SocialiteWasCalled $event) {
             $event->extendSocialite('zitadel', \SocialiteProviders\Zitadel\Provider::class);
         });
