@@ -1,9 +1,55 @@
-<div class="fi-fo-sso-login mt-4">
-    <a href="{{ route('sso.login') }}" 
-       class="w-full flex items-center justify-center gap-3 px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg shadow-sm text-sm font-medium text-gray-700 dark:text-gray-200 bg-white dark:bg-gray-800 hover:bg-gray-50 dark:hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-500 transition-colors">
-        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-5 h-5">
-            <path stroke-linecap="round" stroke-linejoin="round" d="M15.75 6a3.75 3.75 0 1 1-7.5 0 3.75 3.75 0 0 1 7.5 0ZM4.501 20.118a7.5 7.5 0 0 1 14.998 0A17.933 17.933 0 0 1 12 21.75c-2.676 0-5.216-.584-7.499-1.632Z" />
+<style>
+    .eighteen73-sso-button {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        width: 100%;
+        height: 40px;
+        border-radius: 8px;
+        text-decoration: none;
+        background-color: #1f1f1f;
+        color: #f4efed;
+    }
+
+    .eighteen73-sso-button:hover {
+        text-decoration: none;
+        background-color: #000000;
+    }
+
+    .eighteen73-sso-logo {
+        width: 24px;
+        height: 24px;
+        display: block;
+    }
+
+    .eighteen73-sso-text {
+        margin-left: 12px;
+        white-space: nowrap;
+    }
+
+    /* Dark mode */
+    @media (prefers-color-scheme: dark) {
+        .dark .eighteen73-sso-button {
+            background-color: #f4efed;
+            color: #1f1f1f;
+        }
+
+        .dark .eighteen73-sso-button:hover {
+            background-color: #e3dedc;
+        }
+    }
+</style>
+
+<div class="eighteen73-sso-button-container">
+    <a href="{{ route('sso.login') }}" class="eighteen73-sso-button">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1024 1024" class="eighteen73-sso-logo">
+            <path
+                d="M25.991 828.157 9.1 830.078l-3.842-33.782 16.891-1.921c184.129-20.94 815.896-38.709 968.945-37.571l17 .126-.253 33.999-17-.126c-152.402-1.133-781.499 16.503-964.85 37.354"
+                style="fill:#de94b5" />
+            <path
+                d="m2.01 666.942 23.486-.743c22.149-.739 30.199-2.955 31.545-11.843l57.05-304.102-66.447-11.844 2.01-3.701 125.508-17.749-65.101 338.893c-1.347 5.914 3.357 8.872 35.575 10.346l18.793.743.673 4.444H-.001zM204.205 562.61c0-67.339 55.704-115.424 130.201-123.567l.673-1.474c-35.575-31.819-67.111-65.855-67.111-113.208 0-59.196 48.991-128.009 128.191-128.009 70.467 0 124.833 49.579 124.833 113.939S470.657 409.45 406.23 419.798v1.484c40.267 35.52 79.863 72.514 79.863 130.957 0 71.03-62.419 131.711-140.935 131.711s-140.944-53.282-140.944-121.352l-.009.01Zm228.868 17.028c0-57.723-48.329-96.201-92.617-136.152-49.665 19.986-83.22 60.681-83.22 129.493 0 54.013 27.516 103.59 89.26 103.59 54.368 0 86.586-50.319 86.586-96.93h-.008Zm35.565-280.437c0-47.353-20.141-95.448-70.477-95.448-50.339 0-77.181 47.353-77.181 93.963 0 49.579 39.595 84.346 79.871 119.135 38.934-20.729 67.787-60.681 67.787-117.65M775.387 387.248l-.674-2.958h-99.33c-87.25 0-114.766 2.958-137.589 59.196l-3.356 7.401-5.364-.742 37.585-125.04h245.646v2.958L578.072 807.527h-42.286l239.6-420.267v-.01ZM738.778 762.402c0-18.503 12.75-36.264 34.899-36.264 20.804 0 48.994 31.812 26.171 68.072 12.08 8.876 30.872 17.018 49.665 17.018 55.703 0 102.011-60.669 102.011-131.699 0-62.897-36.91-107.29-104.705-107.29-13.417 0-26.167 1.474-36.91 3.69l-2.011-4.443c111.41-51.795 160.4-77.688 160.4-145.027 0-39.21-25.505-75.472-67.783-75.472-34.229 0-69.132 28.119-87.25 64.371l-4.705-3.69c23.49-53.28 72.488-97.674 127.52-97.674s87.92 42.921 87.92 89.531c0 57.722-34.225 96.19-126.171 130.225v1.484l1.349.732c69.128 6.659 105.368 65.121 105.368 123.566 0 79.172-73.825 159.087-161.745 159.087-55.707 0-104.035-14.059-104.035-56.229z"
+                style="fill:currentColor;fill-rule:nonzero" />
         </svg>
-        <span>Login with SSO</span>
+        <span class="eighteen73-sso-text">Sign in with eighteen73</span>
     </a>
 </div>
