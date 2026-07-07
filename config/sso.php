@@ -38,6 +38,34 @@ return [
 
     /*
      |--------------------------------------------------------------------------
+     | Login Parameters
+     |--------------------------------------------------------------------------
+     |
+     | Extra OpenID Connect authorisation request parameters to send on every
+     | SSO login redirect. For example, ['prompt' => 'login'] forces users to
+     | re-authenticate. Provider-specific MFA parameters can also be set here.
+     |
+     */
+    'login_parameters' => [],
+
+    /*
+     |--------------------------------------------------------------------------
+     | Zitadel Options
+     |--------------------------------------------------------------------------
+     |
+     | Zitadel-specific login behaviour. MFA enforcement verifies that Zitadel's
+     | ID token includes the "mfa" authentication method reference. Enable Force
+     | MFA in Zitadel's login policy so users are prompted before returning here.
+     | Account selection sends prompt=select_account on every login redirect.
+     |
+     */
+    'zitadel' => [
+        'enforce_mfa' => env('ZITADEL_ENFORCE_MFA', false),
+        'select_account' => env('ZITADEL_SELECT_ACCOUNT', false),
+    ],
+
+    /*
+     |--------------------------------------------------------------------------
      | User Resolver Action
      |--------------------------------------------------------------------------
      |

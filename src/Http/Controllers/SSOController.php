@@ -15,8 +15,18 @@ class SSOController extends Controller
     public function login()
     {
         $provider = config('sso.provider', 'zitadel');
+        $loginParameters = array_filter(
+            $this->loginParameters($provider),
+            fn ($value) => $value !== null && $value !== ''
+        );
 
-        return Socialite::driver($provider)->redirect();
+        $driver = Socialite::driver($provider);
+
+        if ($loginParameters !== []) {
+            $driver->with($loginParameters);
+        }
+
+        return $driver->redirect();
     }
 
     public function callback(Request $request)
@@ -29,6 +39,12 @@ class SSOController extends Controller
             event(new SSOLoginFailed($provider, null, $e));
 
             return redirect('/login')->withErrors(['sso' => 'Authentication failed or was cancelled.']);
+        }
+
+        if ($provider === 'zitadel' && config('sso.zitadel.enforce_mfa', false) && ! $this->hasMfaAuthenticationMethod($ssoUser->accessTokenResponseBody['id_token'] ?? null)) {
+            event(new SSOLoginFailed($provider, $ssoUser, new SSOException('Multi-factor authentication is required.')));
+
+            return redirect('/login')->withErrors(['sso' => 'Multi-factor authentication is required.']);
         }
 
         // Store the ID token for global logout
@@ -77,5 +93,47 @@ class SSOController extends Controller
         }
 
         return redirect('/');
+    }
+
+    private function hasMfaAuthenticationMethod(?string $idToken): bool
+    {
+        if (! $idToken) {
+            return false;
+        }
+
+        $parts = explode('.', $idToken);
+
+        if (count($parts) < 2) {
+            return false;
+        }
+
+        $payload = json_decode(base64_decode(strtr($parts[1], '-_', '+/')), true);
+
+        if (! is_array($payload) || ! isset($payload['amr'])) {
+            return false;
+        }
+
+        $methods = is_array($payload['amr']) ? $payload['amr'] : explode(' ', (string) $payload['amr']);
+
+        return in_array('mfa', $methods, true);
+    }
+
+    private function loginParameters(string $provider): array
+    {
+        $parameters = config('sso.login_parameters', []);
+
+        if ($provider !== 'zitadel' || ! config('sso.zitadel.select_account', false)) {
+            return $parameters;
+        }
+
+        $prompts = array_filter(explode(' ', (string) ($parameters['prompt'] ?? '')));
+
+        if (! in_array('select_account', $prompts, true)) {
+            $prompts[] = 'select_account';
+        }
+
+        $parameters['prompt'] = implode(' ', $prompts);
+
+        return $parameters;
     }
 }
