@@ -2,6 +2,8 @@
 
 namespace Eighteen73\SSO\Tests;
 
+use Eighteen73\SSO\Concerns\HasSsoAccounts;
+use Eighteen73\SSO\Contracts\HasSsoAccounts as HasSsoAccountsContract;
 use Eighteen73\SSO\SSOServiceProvider;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Foundation\Auth\User;
@@ -56,7 +58,17 @@ class TestCase extends Orchestra
 
 class TestUser extends User
 {
+    use HasSsoAccounts;
+
     protected $table = 'users';
 
     protected $guarded = [];
+}
+
+class SsoRequiredTestUser extends TestUser implements HasSsoAccountsContract
+{
+    public function requiresSsoLogin(): bool
+    {
+        return true;
+    }
 }

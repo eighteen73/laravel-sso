@@ -8,6 +8,7 @@ A reusable Laravel package for integrating Single Sign-On (SSO) using Laravel So
 
 - Automatic Socialite provider registration for Zitadel.
 - Dedicated `sso_accounts` table to map SSO identities to local users.
+- Optional user model helpers for SSO account relationships and login policy checks.
 - Configurable user resolution with opt-in auto-creation logic.
 - Automatic integration with Filament login forms via render hooks.
 - Support for multiple SSO connections per user.
@@ -80,6 +81,30 @@ class CustomResolveUser extends ResolveUser
     }
 }
 ```
+
+## User Model Helpers
+
+Your application user model can opt into SSO relationship and policy helpers by using the `HasSsoAccounts` trait:
+
+```php
+namespace App\Models;
+
+use Eighteen73\SSO\Concerns\HasSsoAccounts;
+use Eighteen73\SSO\Contracts\HasSsoAccounts as HasSsoAccountsContract;
+use Illuminate\Foundation\Auth\User as Authenticatable;
+
+class User extends Authenticatable implements HasSsoAccountsContract
+{
+    use HasSsoAccounts;
+
+    public function requiresSsoLogin(): bool
+    {
+        return $this->role->requiresSso();
+    }
+}
+```
+
+The default policy methods are permissive: `requiresSsoLogin()` returns `false`, and `canUsePasswordLogin()` returns `true`. Override them in your application when roles, tenants, or other local rules require stricter behavior.
 
 ## Testing
 
