@@ -8,7 +8,7 @@ A reusable Laravel package for integrating Single Sign-On (SSO) using Laravel So
 
 - Automatic Socialite provider registration for Zitadel.
 - Dedicated `sso_accounts` table to map SSO identities to local users.
-- Configurable user resolution and auto-creation logic.
+- Configurable user resolution with opt-in auto-creation logic.
 - Automatic integration with Filament login forms via render hooks.
 - Support for multiple SSO connections per user.
 
@@ -38,7 +38,7 @@ php artisan migrate
 The configuration file is located at `config/sso.php`. You can customise the following:
 
 - `provider`: The Socialite driver to use (defaulting to `zitadel`).
-- `auto_create_users`: Whether to create a new local user if the SSO email is not found.
+- `auto_create_users`: Whether to create a new local user if the SSO email is not found. This is disabled by default, so unknown SSO users are rejected unless you explicitly opt into provisioning.
 - `redirect_path`: The path to redirect to after a successful login.
 - `user_resolver`: The action class used to map SSO data to a local user.
 - `filament`: Settings for Filament integration, including which panels to display the SSO button on.
@@ -55,7 +55,11 @@ ZITADEL_POST_LOGOUT_REDIRECT_URI=https://your-app.com/logged-out
 
 ## Customising User Resolution
 
-If you need to perform additional logic when a user is resolved (such as assigning roles or updating custom attributes), you can create a custom action that implements `Eighteen73\SSO\Actions\ResolveUserContract` and update the `user_resolver` in your config.
+By default, the package links an SSO identity to an existing local user by matching the SSO email address. If no local user exists, login fails unless `auto_create_users` is explicitly enabled.
+
+The built-in auto-creation path only fills common `name`, `email`, and `password` attributes. If your application requires additional columns such as `first_name`, `last_name`, `is_enabled`, `role`, tenant IDs, or any other app-specific state, create a custom action that implements `Eighteen73\SSO\Actions\ResolveUserContract` and update the `user_resolver` in your config.
+
+You can also extend the default resolver if you only need to add behavior around the package's built-in linking logic:
 
 ```php
 namespace App\Actions;

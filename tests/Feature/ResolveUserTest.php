@@ -5,6 +5,24 @@ use Eighteen73\SSO\Exceptions\UserNotFoundException;
 use Eighteen73\SSO\Tests\TestUser;
 use Laravel\Socialite\Two\User as ProviderUser;
 
+it('rejects a missing user by default', function () {
+    $ssoUser = new ProviderUser;
+    $ssoUser->map([
+        'id' => 'abcde',
+        'email' => 'missing@example.com',
+        'name' => 'Missing User',
+    ]);
+
+    $resolver = new ResolveUser;
+
+    expect(fn () => $resolver->resolve('zitadel', $ssoUser))
+        ->toThrow(UserNotFoundException::class, 'User not found and auto-creation is disabled.');
+
+    $this->assertDatabaseMissing('users', [
+        'email' => 'missing@example.com',
+    ]);
+});
+
 it('creates a new user and social account when auto create is true', function () {
     config()->set('sso.auto_create_users', true);
 
@@ -63,7 +81,7 @@ it('links existing user when email matches', function () {
     ]);
 });
 
-it('throws exception when auto create is false and user does not exist', function () {
+it('throws exception when auto create is explicitly false and user does not exist', function () {
     config()->set('sso.auto_create_users', false);
 
     $ssoUser = new ProviderUser;

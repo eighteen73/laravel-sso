@@ -18,11 +18,13 @@ return [
      | User Auto-Creation
      |--------------------------------------------------------------------------
      |
-     | If true, a new user will be created if their SSO email is not found
-     | in the local database. If false, an exception will be thrown.
+     | By default, SSO users must already exist in the local database and
+     | will be linked by email on first login. Enable this only when your
+     | user model can be created with the package's default attributes, or
+     | provide a custom user resolver for app-specific required fields.
      |
      */
-    'auto_create_users' => true,
+    'auto_create_users' => false,
 
     /*
      |--------------------------------------------------------------------------

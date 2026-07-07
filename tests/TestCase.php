@@ -37,7 +37,6 @@ class TestCase extends Orchestra
         ]);
 
         config()->set('app.key', 'base64:JjR0yY1sNf5mK/A0X2+D2D+y2G/2lZ3N8V7lU4jFwG8=');
-        config()->set('sso.auto_create_users', true);
         config()->set('auth.providers.users.model', TestUser::class);
     }
 
